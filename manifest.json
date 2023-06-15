@@ -1,0 +1,38 @@
+{
+  "name": "Byte Lobster",
+  "version": "0.0.0",
+  "description": "Finally, One Button to Press. Less 0's and Tab, and more Assembly.",
+  "permissions": ["storage", "tabs", "scripting", "activeTab", "downloads"],
+  "host_permissions": ["https://cpulator.01xz.net/?sys=arm"],
+  "background": {
+      "service_worker": "background.js"
+    },
+  "content_scripts": [
+      {
+        "matches": ["https://cpulator.01xz.net/?sys=arm"],
+        "run_at": "document_end",
+        "js": ["contentScripts.js"]
+      }
+  ],
+  "web_accessible_resources": [{
+      "resources": ["pageActions.js", "settings.html"],
+      "matches": ["<all_urls>"]
+    }],
+  "icons": {  
+    "16": "assets/images/lobster-16.png",
+    "32": "assets/images/lobster-32.png",
+    "48": "assets/images/lobster-48.png",
+    "128": "assets/images/lobster-128.png"
+  },
+  "action": { 
+      "default_icon": {   
+          "16": "assets/images/lobster-16.png",
+          "32": "assets/images/lobster-32.png",
+          "48": "assets/images/lobster-48.png",
+          "128": "assets/images/lobster-128.png"
+      },
+      "default_title": "Byte Lobster", 
+      "default_popup": "/popup/popup.html"
+  },
+  "manifest_version": 3
+}
