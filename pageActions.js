@@ -1,34 +1,38 @@
 window.addEventListener("message", function (event) {
   if (event.source === window) {
     if (event.data.type === "activateClearReg") {
+      findRegisterDiv();
       clearRegister();
     }
 
     if (event.data.type === "activateFindCodeMirror") {
-      downloadText(getText());
-    }
-
-    if (event.data.type === "activateClearMem") {
-      console.log("Clearing Memory Now!!");
+      findAssemblyCode();
+      const targetAssemblyCode = jsonToString(generateJsonString());
+      downloadText(targetAssemblyCode, event.data.fileName);
     }
 
     if (event.data.type === "activateRefresh") {
-      console.log("Activating Refresh");
+      window.postMessage(
+        { type: "storeAssemblyCode", data: generateJsonString() },
+        "*"
+      );
+
+      location.reload();
     }
 
-    if (event.data.type === "activateSettings") {
-      console.log("Activating Settings");
+    if (event.data.type === "pasteAssemblyCode") {
+      pasteAssemblyCode(jsonToString(event.data.data));
     }
   }
 });
 
 const clearRegister = () => {
   registerList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-  findRegElements();
+
   for (let i = 0; i < registerList.length; i++) {
     const registerVal = registerList[i];
-    var targetReg = `#reg_value_r${registerVal} input`;
-    var inputElement = document.querySelector(targetReg);
+    var targetRegister = `#reg_value_r${registerVal} input`;
+    var inputElement = document.querySelector(targetRegister);
 
     if (inputElement) {
       inputElement.Ea = true;
@@ -57,9 +61,9 @@ const clearRegister = () => {
   }
 };
 
-const findRegElements = () => {
-  const registerBlock = document.querySelector("#reg_cm div.reg_block");
-  if (!registerBlock) {
+const findRegisterDiv = () => {
+  const registerDiv = document.querySelector("#reg_cm div.reg_block");
+  if (!registerDiv) {
     const targetTab = Array.from(
       document.querySelectorAll(
         "div.tab-handle.disable-selection div.tab-handle-text"
@@ -69,29 +73,36 @@ const findRegElements = () => {
   }
 };
 
-const getText = () => {
-  findCode();
-
+const generateJsonString = () => {
   let elem = document.querySelector("#qasm_cm div.CodeMirror-code");
   const sTxt = {};
   captureText(elem, sTxt);
-
-  const valuesString = Object.values(sTxt)
-    .filter((line) => line.trim().replace(/\u200B/g, ""))
-    .join("\n");
-
-  return valuesString;
+  return sTxt;
 };
 
-const addToJSON = (value, sTxt) => {
+const jsonToString = (sTxt) => {
+  const string = Object.values(sTxt)
+    .filter((line) => line.replace(/\u200B/g, ""))
+    .join("\n");
+
+  var pattern = /[\u200B-\u200D\uFEFF]/g;
+  if (pattern.test(sTxt)) return "erorr";
+  else return string;
+};
+
+const addToJson = (value, sTxt) => {
   const newCount = Object.keys(sTxt).length + 1;
-  sTxt[newCount] = value.trim();
+  sTxt[newCount] = value;
 };
 
 const captureText = (elem, sTxt) => {
-  if (elem.getAttribute("role") === "presentation" && elem.tagName === "SPAN") {
-    const textContent = elem.textContent.trim();
-    addToJSON(textContent, sTxt);
+  if (
+    elem.getAttribute("role") === "presentation" &&
+    elem.tagName === "SPAN" &&
+    elem.parentNode.tagName !== "SPAN"
+  ) {
+    const textContent = elem.textContent;
+    addToJson(textContent, sTxt);
   }
 
   if (elem.hasChildNodes()) {
@@ -103,12 +114,12 @@ const captureText = (elem, sTxt) => {
   }
 };
 
-const downloadText = (valuesString) => {
+const downloadText = (text, fileName) => {
   // file-like object
-  const blob = new Blob([valuesString], { type: "text/plain" });
+  const blob = new Blob([text], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
 
-  const filename = `assembly_${Date.now()}.txt`;
+  const filename = `${fileName}_${Date.now()}.txt`;
   const tempLink = document.createElement("a");
   tempLink.href = url;
   tempLink.download = filename;
@@ -117,9 +128,9 @@ const downloadText = (valuesString) => {
   URL.revokeObjectURL(url);
 };
 
-const findCode = () => {
-  const CodeMirror = document.querySelector("#qasm_cm");
-  if (!CodeMirror) {
+const findAssemblyCode = () => {
+  const codeMirrorDiv = document.querySelector("#qasm_cm");
+  if (!codeMirrorDiv) {
     const tab = Array.from(
       document.querySelectorAll(
         "div.tab-handle.disable-selection div.tab-handle-text"
@@ -127,4 +138,17 @@ const findCode = () => {
     ).find((element) => element.textContent.trim() === "Editor (Ctrl-E)");
     tab.click();
   }
+};
+
+const pasteAssemblyCode = (text) => {
+  var tempFile = {
+    currentTarget: {
+      value: "refresh.s",
+    },
+    target: {
+      files: [new File([text], "refresh.s", { type: "text/plain" })],
+      value: "refresh.s",
+    },
+  };
+  Zb(tempFile);
 };

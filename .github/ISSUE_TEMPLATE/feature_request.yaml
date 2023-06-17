@@ -1,0 +1,27 @@
+name: Feature Request
+description: Suggest an Idea For This Project.
+body:
+  - type: checkboxes
+    attributes:
+      label: Prerequisites
+      description: |
+        To rule out invalid features request, confirm and check each one of the checkboxes.
+      options:
+        - label: I performed a [cursory search of the features tracker](https://github.com/yycorcino/byte-lobster/issues) to avoid opening a duplicate feature request.
+          required: true
+        - label: I checked the [documentation](https://github.com/yycorcino/byte-lobster/wiki) to understand that the feature I am reporting is not already a feature.
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Is your Feature Request Related to a Problem? Please Describe.
+      description: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Describe the Solution you'd like.
+      description: A clear and concise description of what you want to happen.
+    validations:
+      required: true

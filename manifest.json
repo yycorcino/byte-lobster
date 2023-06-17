@@ -2,7 +2,7 @@
   "name": "Byte Lobster",
   "version": "0.0.0",
   "description": "Finally, One Button to Press. Less 0's and Tab, and more Assembly.",
-  "permissions": ["storage", "tabs", "scripting", "activeTab", "downloads"],
+  "permissions": ["storage", "tabs", "scripting", "activeTab", "downloads", "webNavigation"],
   "host_permissions": ["https://cpulator.01xz.net/?sys=arm"],
   "background": {
       "service_worker": "background.js"

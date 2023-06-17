@@ -57,7 +57,7 @@ body {
 
 .mainTab {
     position: absolute;
-    transform: translate3d(0, 23px, 0);
+    transform: translate3d(0, 10px, 0);
     -webkit-transition: transform 1.5s ease;
 }
 

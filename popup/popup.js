@@ -38,32 +38,8 @@ saveToTextBtn.onclick = async function (e) {
   );
 };
 
-const clearMemBtn = document.getElementById("clearMem");
-clearMemBtn.onclick = async function (e) {
-  let queryOptions = { active: true, currentWindow: true };
-  let tabs = await chrome.tabs.query(queryOptions);
-
-  // sends message to contentScripts.js
-  chrome.tabs.sendMessage(
-    tabs[0].id,
-    { command: "clearMem" },
-    function (response) {
-      if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError);
-      } else {
-        console.log("clearMemBtn - " + response.status);
-      }
-    }
-  );
-};
-
 const refreshBtn = document.getElementById("refresh");
 refreshBtn.onclick = async function (e) {
-  // reloads page
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.tabs.reload(tabs[0].id);
-  });
-
   let queryOptions = { active: true, currentWindow: true };
   let tabs = await chrome.tabs.query(queryOptions);
 
@@ -102,8 +78,39 @@ settingsBtn.onclick = async function (e) {
   });
 };
 
+const updateFileNameInput = document.querySelector("newFileName");
+// set default file name
+// chrome.storage.sync.get("file_name", function (result) {
+//   const fileName = result.file_name;
+//   console.log(fileName);
+//   updateFileNameInput.value = "fileName";
+// });
+
+// updateFileNameInput.addEventListener("keyup", function (event) {
+//   console.log(updateFileNameInput.nodeValue);
+//   if (event.key === 13) {
+//     console.log(updateFileNameInput);
+//     // let queryOptions = { active: true, currentWindow: true };
+//     // let tabs = await chrome.tabs.query(queryOptions);
+
+//     // sends message to contentScripts.js
+//     // chrome.tabs.sendMessage(
+//     //   tabs[0].id,
+//     //   { command: "updateFileName", fileName: updateFileNameInput.value },
+//     //   function (response) {
+//     //     if (chrome.runtime.lastError) {
+//     //       console.error(chrome.runtime.lastError);
+//     //     } else {
+//     //       console.log("updateFileName - " + response.status);
+//     //     }
+//     //   }
+//     // );
+//   }
+// });
+
 // handles if current tab is CPUlator ARM
 document.addEventListener("DOMContentLoaded", async () => {
+  console.log("did");
   var mainTab = document.querySelector(".mainTab");
   var settingsTab = document.querySelector(".settingsTab");
 
@@ -111,40 +118,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   settingsBtn.onclick = async function (e) {
     mainTab.classList.toggle("animate");
     settingsTab.classList.toggle("animate");
-    // let queryOptions = { active: true, currentWindow: true };
-    // let tabs = await chrome.tabs.query(queryOptions);
-    // // sends message to contentScripts.js
-    // chrome.tabs.sendMessage(
-    //   tabs[0].id,
-    //   { command: "settings" },
-    //   function (response) {
-    //     if (chrome.runtime.lastError) {
-    //       console.error(chrome.runtime.lastError);
-    //     } else {
-    //       console.log("settingsBtn - " + response.status);
-    //     }
-    //   }
-    // );
   };
 
   const goMainTabBtn = document.getElementById("goToMainTab");
   goMainTabBtn.onclick = async function (e) {
     settingsTab.classList.toggle("animate");
     mainTab.classList.toggle("animate");
-    // let queryOptions = { active: true, currentWindow: true };
-    // let tabs = await chrome.tabs.query(queryOptions);
-    // // sends message to contentScripts.js
-    // chrome.tabs.sendMessage(
-    //   tabs[0].id,
-    //   { command: "goToMainTab" },
-    //   function (response) {
-    //     if (chrome.runtime.lastError) {
-    //       console.error(chrome.runtime.lastError);
-    //     } else {
-    //       console.log("settingsBtn - " + response.status);
-    //     }
-    //   }
-    // );
   };
 
   const activeTab = await getActiveTabURL();
