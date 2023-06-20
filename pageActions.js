@@ -12,6 +12,7 @@ window.addEventListener("message", function (event) {
     }
 
     if (event.data.type === "activateRefresh") {
+      // sends to contentScripts.js
       window.postMessage(
         { type: "storeAssemblyCode", data: generateJsonString() },
         "*"

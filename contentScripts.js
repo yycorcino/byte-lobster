@@ -1,7 +1,11 @@
 (() => {
   window.addEventListener("message", function (event) {
     if (event.source === window && event.data.type === "storeAssemblyCode") {
+      // store the code
       chrome.storage.sync.set({ code: event.data.data }, null);
+
+      // send to background.js to know this website load is the website to paste code
+      chrome.runtime.sendMessage({ command: "waitThenPaste" });
     }
   });
 

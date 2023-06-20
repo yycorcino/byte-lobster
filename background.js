@@ -2,7 +2,7 @@ chrome.runtime.onInstalled.addListener(function () {
   chrome.storage.sync.set({ file_name: "assembly" }, null);
 });
 
-chrome.webNavigation.onCommitted.addListener((details) => {
+const waitOnloadThenPaste = (details) => {
   if (
     ["link"].includes(details.transitionType) &&
     details.url === "https://cpulator.01xz.net/?sys=arm"
@@ -18,5 +18,15 @@ chrome.webNavigation.onCommitted.addListener((details) => {
         });
       });
     }, 1000);
+
+    chrome.webNavigation.onCommitted.removeListener(waitOnloadThenPaste);
+  }
+};
+
+// receiving from contentScripts.js
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.command === "waitThenPaste") {
+    console.log("test");
+    chrome.webNavigation.onCommitted.addListener(waitOnloadThenPaste);
   }
 });
