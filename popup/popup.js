@@ -87,15 +87,15 @@ const removeAlert = () => {
   var closeBtn = document.querySelector("div.alert .closebtn");
 
   // remove in 4 secs
-  if (closeBtn) {
+  setTimeout(function () {
+    var div = closeBtn.parentElement;
+    div.style.opacity = "0";
     setTimeout(function () {
-      var div = closeBtn.parentElement;
-      div.style.opacity = "0";
-      setTimeout(function () {
+      if (div.parentNode) {
         div.parentNode.removeChild(div);
-      }, 400);
-    }, 4000);
-  }
+      }
+    }, 400);
+  }, 4000);
 
   // option to close before 4 secs
   closeBtn.onclick = function () {
@@ -130,8 +130,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   fileNameInput.addEventListener("keyup", async (event) => {
     const invalidCharacters = /[<>:"\/\\|?*\x00-\x1F]/;
+    const invalidSpaces = /^\s*$/;
     if (event.key === "Enter") {
-      if (!invalidCharacters.test(fileNameInput.value)) {
+      if (
+        !invalidCharacters.test(fileNameInput.value) &&
+        !invalidSpaces.test(fileNameInput.value)
+      ) {
         sendToContentScripts(
           "updateFileName",
           fileNameInput.value,
