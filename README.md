@@ -60,8 +60,8 @@
             <td>The <a href="https://github.com/yycorcino/byte-lobster/wiki">additional popup user interface</a> for customizable default file names providing effortless Assembly programming.</td>
         </tr>
         <tr>
-            <td align="center" valign="top"><a href="https://github.com/yycorcino/byte-lobster/wiki"><img src="https://github.com/yycorcino/byte-lobster/media/chrome-ext-img1.png"/></a></td>
-            <td align="center" valign="top"><a href="https://github.com/yycorcino/byte-lobster/wiki"><img src="https://github.com/yycorcino/byte-lobster/media/chrome-ext-img2.png"/></a></td>
+            <td align="center" valign="top"><a href="https://github.com/yycorcino/byte-lobster/wiki"><img src="https://github.com/yycorcino/byte-lobster/blob/media/chrome-ext-img1.png"/></a></td>
+            <td align="center" valign="top"><a href="https://github.com/yycorcino/byte-lobster/wiki"><img src="https://github.com/yycorcino/byte-lobster/blob/media/chrome-ext-img2.png"/></a></td>
         </tr>
     </tbody>
 </table>
@@ -83,7 +83,7 @@ Getting started with the Chrome extension is quick and easy. Options for downloa
 Once you have installed the Byte Lobster Chrome extension, you can easily utilize its powerful features to streamline your assembly programming workflow. Follow these steps to make the most out of the extension:
 
 1. Open the [Online Assembly Environment](https://cpulator.01xz.net/?sys=arm): Open [CPUlator](https://cpulator.01xz.net/?sys=arm) or click on the Chrome extension and "Open ARM CPUlator."
-   <img src="https://github.com/yycorcino/byte-lobster/media/chrome-ext-wrong-page.png"/>
+   <img src="https://github.com/yycorcino/byte-lobster/blob/media/chrome-ext-wrong-page.png"/>
    <br />
 
 2. Write and Test Your Code: Write your assembly code as usual, utilizing the programming environment's editor and tools. Test and debug your code to ensure it functions correctly.
