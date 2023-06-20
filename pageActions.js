@@ -38,26 +38,8 @@ const clearRegister = () => {
     if (inputElement) {
       inputElement.Ea = true;
       inputElement.value = "00000000";
-
-      if (inputElement.Ea) {
-        var b = H[inputElement.D[0]][inputElement.D[1]];
-        var a = b[2] & 15;
-        var c = ra(a);
-        b = b[1];
-        a =
-          1 == a || 2 == a
-            ? xb(inputElement.value, c, 6)
-            : xb(inputElement.value, c);
-        if (3 == c) {
-          x(8, [b, a.qa]);
-          x(8, [b + 1, a.pa]);
-        } else {
-          x(8, [b, a]);
-        }
-        inputElement.classList.remove("editing");
-        x(6);
-        inputElement.Ea = !1;
-      }
+      Hb.call(inputElement);
+      Gb.call(inputElement);
     }
   }
 };
