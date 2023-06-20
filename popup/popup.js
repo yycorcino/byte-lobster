@@ -1,64 +1,43 @@
 import { getActiveTabURL } from "../assets/utils.js";
 
-const restGRegBtn = document.getElementById("resetGReg");
-restGRegBtn.onclick = async function (e) {
+const sendToContentScripts = async (command, data = "noData", btnName) => {
+  // determine which tab to send message
   let queryOptions = { active: true, currentWindow: true };
   let tabs = await chrome.tabs.query(queryOptions);
 
-  // sends message to contentScripts.js
-  chrome.tabs.sendMessage(
-    tabs[0].id,
-    { command: "resetGReg" },
-    function (response) {
-      if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError);
-      } else {
-        console.log("resetGRegBtn - " + response.status);
-      }
+  let callObj = { command: command };
+  if (data !== "noData") {
+    callObj = { command: command, data: data };
+  }
+
+  // sends message to tab specific contentScripts.js
+  chrome.tabs.sendMessage(tabs[0].id, callObj, function (response) {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+    } else {
+      console.log(`${btnName} - ${response.status}`);
     }
-  );
+  });
+};
+
+const restGRegBtn = document.getElementById("resetGReg");
+restGRegBtn.onclick = async function (e) {
+  sendToContentScripts("resetGReg", "restGRegBtn");
 };
 
 const saveToTextBtn = document.getElementById("saveToText");
 saveToTextBtn.onclick = async function (e) {
-  let queryOptions = { active: true, currentWindow: true };
-  let tabs = await chrome.tabs.query(queryOptions);
-
-  // sends message to contentScripts.js
-  chrome.tabs.sendMessage(
-    tabs[0].id,
-    { command: "saveToText" },
-    function (response) {
-      if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError);
-      } else {
-        console.log("saveToTextBtn - " + response.status);
-      }
-    }
-  );
+  sendToContentScripts("saveToText", "saveToTextBtn");
 };
 
 const refreshBtn = document.getElementById("refresh");
 refreshBtn.onclick = async function (e) {
-  let queryOptions = { active: true, currentWindow: true };
-  let tabs = await chrome.tabs.query(queryOptions);
-
-  // sends message to contentScripts.js
-  chrome.tabs.sendMessage(
-    tabs[0].id,
-    { command: "refresh" },
-    function (response) {
-      if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError);
-      } else {
-        console.log("refreshBtn - " + response.status);
-      }
-    }
-  );
+  sendToContentScripts("refresh", "refreshBtn");
 };
 
 const settingsBtn = document.getElementById("settingsPage");
 settingsBtn.onclick = async function (e) {
+  // determine if settings pages needs to be open
   chrome.tabs.query({}, function (tabs) {
     var settingsExist = false;
     var tabId;
@@ -67,7 +46,6 @@ settingsBtn.onclick = async function (e) {
         settingsExist = true;
         tabId = tab.id;
       }
-      console.log(tab.url);
     });
 
     if (settingsExist) {
@@ -78,53 +56,97 @@ settingsBtn.onclick = async function (e) {
   });
 };
 
-const updateFileNameInput = document.querySelector("newFileName");
-// set default file name
-// chrome.storage.sync.get("file_name", function (result) {
-//   const fileName = result.file_name;
-//   console.log(fileName);
-//   updateFileNameInput.value = "fileName";
-// });
+const createAlert = (type) => {
+  let alertDiv = document.querySelector("div.alert");
 
-// updateFileNameInput.addEventListener("keyup", function (event) {
-//   console.log(updateFileNameInput.nodeValue);
-//   if (event.key === 13) {
-//     console.log(updateFileNameInput);
-//     // let queryOptions = { active: true, currentWindow: true };
-//     // let tabs = await chrome.tabs.query(queryOptions);
+  if (!alertDiv) {
+    alertDiv = document.createElement("div");
+  } else {
+    alertDiv.remove();
+  }
 
-//     // sends message to contentScripts.js
-//     // chrome.tabs.sendMessage(
-//     //   tabs[0].id,
-//     //   { command: "updateFileName", fileName: updateFileNameInput.value },
-//     //   function (response) {
-//     //     if (chrome.runtime.lastError) {
-//     //       console.error(chrome.runtime.lastError);
-//     //     } else {
-//     //       console.log("updateFileName - " + response.status);
-//     //     }
-//     //   }
-//     // );
-//   }
-// });
+  if (type === "success") {
+    alertDiv.classList.add("alert", "success");
+    alertDiv.innerHTML = `
+      <span class="closebtn">&times;</span>
+      <strong>Success!</strong> File Name is Updated.
+    `;
+  } else {
+    alertDiv.className = "alert";
+    alertDiv.innerHTML = `
+      <span class="closebtn">&times;</span>
+      <strong>Danger!</strong> File Name is Invalid.
+    `;
+  }
+  const settingsTab = document.querySelector("div.settingsTab");
+  settingsTab.appendChild(alertDiv);
+  removeAlert();
+};
 
-// handles if current tab is CPUlator ARM
+const removeAlert = () => {
+  var closeBtn = document.querySelector("div.alert .closebtn");
+
+  // remove in 4 secs
+  if (closeBtn) {
+    setTimeout(function () {
+      var div = closeBtn.parentElement;
+      div.style.opacity = "0";
+      setTimeout(function () {
+        div.parentNode.removeChild(div);
+      }, 400);
+    }, 4000);
+  }
+
+  // option to close before 4 secs
+  closeBtn.onclick = function () {
+    var div = this.parentElement;
+    div.style.opacity = "0";
+    setTimeout(function () {
+      div.parentNode.removeChild(div);
+    }, 300);
+  };
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
-  console.log("did");
-  var mainTab = document.querySelector(".mainTab");
-  var settingsTab = document.querySelector(".settingsTab");
-
+  const settingsTab = document.querySelector(".settingsTab");
   const settingsBtn = document.getElementById("settings");
   settingsBtn.onclick = async function (e) {
     mainTab.classList.toggle("animate");
     settingsTab.classList.toggle("animate");
   };
 
+  const mainTab = document.querySelector(".mainTab");
   const goMainTabBtn = document.getElementById("goToMainTab");
   goMainTabBtn.onclick = async function (e) {
     settingsTab.classList.toggle("animate");
     mainTab.classList.toggle("animate");
   };
+
+  const fileNameInput = document.querySelector("#newFileName");
+  // set place holder value
+  chrome.storage.sync.get("file_name", function (result) {
+    fileNameInput.placeholder = result.file_name;
+  });
+
+  fileNameInput.addEventListener("keyup", async (event) => {
+    const invalidCharacters = /[<>:"\/\\|?*\x00-\x1F]/;
+    if (event.key === "Enter") {
+      if (!invalidCharacters.test(fileNameInput.value)) {
+        sendToContentScripts(
+          "updateFileName",
+          fileNameInput.value,
+          "fileNameInput"
+        );
+
+        fileNameInput.placeholder = fileNameInput.value;
+        fileNameInput.value = "";
+        createAlert("success");
+      } else {
+        fileNameInput.value = "";
+        createAlert("failed");
+      }
+    }
+  });
 
   const activeTab = await getActiveTabURL();
 

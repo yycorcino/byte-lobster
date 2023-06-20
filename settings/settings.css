@@ -1,3 +1,12 @@
+:root {
+    --setFont: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+body {
+    font-family: var(--setFont);
+    background-color: #F5F5F5;
+}
+
 .main-content {
     display: flex;
     flex-direction: column;
@@ -9,7 +18,6 @@
 .support-container {
     display: flex;
     flex-direction: column;
-    width: 750px;
 }
 
 .section {

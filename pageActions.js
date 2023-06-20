@@ -5,7 +5,7 @@ window.addEventListener("message", function (event) {
       clearRegister();
     }
 
-    if (event.data.type === "activateFindCodeMirror") {
+    if (event.data.type === "activateDownloadCode") {
       findAssemblyCode();
       const targetAssemblyCode = jsonToString(generateJsonString());
       downloadText(targetAssemblyCode, event.data.fileName);
@@ -119,7 +119,7 @@ const downloadText = (text, fileName) => {
   const blob = new Blob([text], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
 
-  const filename = `${fileName}_${Date.now()}.txt`;
+  const filename = fileName;
   const tempLink = document.createElement("a");
   tempLink.href = url;
   tempLink.download = filename;

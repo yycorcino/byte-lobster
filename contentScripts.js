@@ -19,7 +19,7 @@
         chrome.storage.sync.get("file_name", function (result) {
           const fileName = result.file_name;
           window.postMessage(
-            { type: "activateFindCodeMirror", fileName: fileName },
+            { type: "activateDownloadCode", fileName: fileName },
             "*"
           );
         });
@@ -31,7 +31,7 @@
         break;
 
       case "updateFileName":
-        chrome.storage.sync.set({ file_name: request.fileName }, null);
+        chrome.storage.sync.set({ file_name: request.data }, null);
         break;
 
       case "onLoadRefreshSave":
