@@ -66,9 +66,13 @@
     </tbody>
 </table>
 
+**Welcome to the project of Byte Lobster!**
+
+This powerful Chrome Extension was designed with one goal in mind: to simplify your workflow by automating simple repetitive task with a click of a button. Gone are the days of manually performing these repetitive and time-consuming tasks. With my extension, you can effortlessly clear general registers with just a click, ensuring a fresh register start for your coding. Moreover, you can conveniently save your valuable code to text files, allowing you to organize and access them whenever needed. I understand the frustration of performing these tasks manually, which is why I created this extension. I hated pressing on the registers and inputting 0 for each register I wanted to clear. Say goodbye to tedious processes and hello to Assembly programming. Try it out now and experience the efficiency you've been wanting!
+
 ## Getting Started
 
-Getting started with the Chrome extension is quick and easy. Options for download and click. Or option for exploratory developers.
+Getting started with the Chrome extension is quick and easy. Simply download and click to install, and you'll be up and ready to go. For developers looking to explore, I offer the source code, so locally you can edit to your needs. Experience the convenience and efficiency it brings!
 
 ### Installation
 
@@ -80,16 +84,16 @@ Getting started with the Chrome extension is quick and easy. Options for downloa
 
 ## Usage
 
-Once you have installed the Byte Lobster Chrome extension, you can easily utilize its powerful features to streamline your assembly programming workflow. Follow these steps to make the most out of the extension:
+Once you have installed the Byte Lobster Chrome extension, you can easily utilize its features to simplify your assembly programming workflow. Follow these steps to make the most out of the extension:
 
-1. Open the [Online Assembly Environment](https://cpulator.01xz.net/?sys=arm): Open [CPUlator](https://cpulator.01xz.net/?sys=arm) or click on the Chrome extension and "Open ARM CPUlator."
+1. Open the [Online Assembly Environment](https://cpulator.01xz.net/?sys=arm): Open [CPUlator](https://cpulator.01xz.net/?sys=arm) or click on the Chrome Extension Icon and click "Open ARM CPUlator."
    <img src="https://github.com/yycorcino/byte-lobster/blob/media/chrome-ext-wrong-page.png"/>
    <br />
 
-2. Write and Test Your Code: Write your assembly code as usual, utilizing the programming environment's editor and tools. Test and debug your code to ensure it functions correctly.
+2. Write and Test Your Code: Write your assembly code as usual, utilizing the programming environment's editor, tools, and memory. Test and debug your code to ensure it functions correctly.
    <br />
 
-3. Clear Registers: When you want to reset or clear the registers, simply click on the Clear Registers button provided by the extension. This action clears all the general registers, allowing you to start fresh without any residual values.
+3. Clear Registers: When you want to reset or clear the general registers, simply click on the "Reset General Purpose Registers" button provided by the extension. This action clears all the general registers, allowing you to start fresh and observe again how registers interact with you assembly program.
    <br />
 
 4. <p>
@@ -101,7 +105,7 @@ Once you have installed the Byte Lobster Chrome extension, you can easily utiliz
    icon.
    </p>
 
-By utilizing the Clear Registers and Save Code To Text File Chrome extension, you can efficiently manage and organize your assembly programming tasks. Simplify the process of clearing registers and conveniently save your code for future use, helping you stay focused and productive in your assembly programming endeavors.
+By utilizing the Clear Registers and Save Code To Text File in this Chrome extension, you can efficiently manage and organize your assembly programming tasks. Simplify the process of clearing registers and conveniently save your code for future use, helping you stay focused and productive in your assembly programming.
 
 ## Credits
 
@@ -122,7 +126,7 @@ Image Credits:
 
 ## About
 
-Sebastian Corcino - [GitHub](https://github.com/yycorcino)
+Author: Sebastian Corcino - [GitHub](https://github.com/yycorcino)
 
 Distributed under the MIT License. See [LICENSE](LICENSE.md) for more information.
 
