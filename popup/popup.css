@@ -7,15 +7,39 @@ body {
     background-color: #F5F5F5;
 }
 
-.container {
+.tab-container {
     display: flex;
+    align-items: stretch;
+    justify-content: center;
+    position:relative;
+    width: 300px;
+    max-height: 100px;
+    color: #314d3e;
+}
+
+.tab-content {
+    display: inline-flexbox;
     align-items: center;
     justify-content: center;
 
-    position: relative;
-    width: 300px;
-    height: fit-content;
-    color: #314d3e;
+    /* height: fit-content; */
+    max-height: 100px;
+    position: absolute;
+    visibility: hidden;
+    transition: opacity 0.6s, transform 0.5s;
+    transform: translateX(100%);
+    left:0;
+    right:0;
+    bottom:0;
+    top:0;
+}
+
+.tab-content.active {
+    height: auto;
+    max-height: 100px;
+    width:100%; 
+    visibility: visible;
+    transform: translateX(0%);
 }
 
 .toolbar {
@@ -48,6 +72,8 @@ body {
 }
   
 .title {
+    display:block;
+
     font-family: var(--setFont);
     font-size: 15px;
     font-weight: bold;
@@ -62,34 +88,17 @@ body {
     font-family: var(--setFont);
 }
 
+span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .form {
-    display: inline-flexbox;
+    display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--setFont);
-}
-
-.mainTab {
-    position: absolute;
-    transform: translate3d(0, 10px, 0);
-    -webkit-transition: transform 1.5s ease;
-}
-
-.mainTab.animate {
-    -webkit-transform: translate3d(-400px, 15px, 0);
-    -webkit-transition: transform 1.5s ease;
-}
-
-.settingsTab {
-    transform: translate3d(400px, 0, 0);
-    -webkit-transform: translate3d(400px, 0, 0);
-    -webkit-transition: transform 1.5s ease;
-}
-
-.settingsTab.animate {
-    transform: translate3d(0, 0, 0);
-    -webkit-transform: translate3d(0, 0, 0);
-    -webkit-transition: transform 1.5s ease;
 }
 
 .form.label {
@@ -116,7 +125,7 @@ body {
     background-color: #04AA6D;
 }
 
-.closebtn {
+.alert-close-btn {
     margin-left: 15px;
     color: white;
     font-weight: bold;
@@ -127,6 +136,28 @@ body {
     transition: 0.3s;
 }
 
-.closebtn:hover {
+.alert-close-btn:hover {
     color: black;
+}
+
+.bookmark-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom-color: #00254d;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-radius: 0.8rem;
+    padding: 3px;
+    padding-bottom: 7px;
+    margin-bottom: 7px;
+}
+
+.bookmark-title {
+    padding-left: 2px;
+}
+
+.bookmark-controls {
+    display: flex;
 }

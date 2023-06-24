@@ -22,7 +22,15 @@ window.addEventListener("message", function (event) {
     }
 
     if (event.data.type === "pasteAssemblyCode") {
-      pasteAssemblyCode(jsonToString(event.data.data));
+      pasteAssemblyCode(jsonToString(event.data.data), event.data.fileName);
+    }
+
+    if (event.data.type === "bookmarkCode") {
+      // sends to contentScripts.js
+      window.postMessage(
+        { type: "storeBookmarkCode", data: generateJsonString() },
+        "*"
+      );
     }
   }
 });
@@ -123,14 +131,15 @@ const findAssemblyCode = () => {
   }
 };
 
-const pasteAssemblyCode = (text) => {
+const pasteAssemblyCode = (text, name) => {
+  const file = name + ".s";
   var tempFile = {
     currentTarget: {
-      value: "refresh.s",
+      value: file,
     },
     target: {
-      files: [new File([text], "refresh.s", { type: "text/plain" })],
-      value: "refresh.s",
+      files: [new File([text], file, { type: "text/plain" })],
+      value: file,
     },
   };
   Zb(tempFile);
