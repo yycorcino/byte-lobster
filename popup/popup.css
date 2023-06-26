@@ -70,14 +70,6 @@ body {
     box-shadow: 0 10px 28px rgba(0,0,0,0.25), 0 6px 10px rgba(0,0,0,0.22);
     border-radius: 35%;
 }
-  
-.title {
-    display:block;
-
-    font-family: var(--setFont);
-    font-size: 15px;
-    font-weight: bold;
-}
 
 .btn {
     width: 100%;
@@ -138,26 +130,4 @@ span {
 
 .alert-close-btn:hover {
     color: black;
-}
-
-.bookmark-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    border-bottom-color: #00254d;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-radius: 0.8rem;
-    padding: 3px;
-    padding-bottom: 7px;
-    margin-bottom: 7px;
-}
-
-.bookmark-title {
-    padding-left: 2px;
-}
-
-.bookmark-controls {
-    display: flex;
 }

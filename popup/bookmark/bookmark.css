@@ -1,0 +1,55 @@
+
+.bookmark-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom-color: #00254d;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-radius: 0.8rem;
+    padding: 3px;
+    padding-bottom: 7px;
+    margin-bottom: 7px;
+}
+
+.bookmark-title {
+    padding-left: 2px;
+}
+
+.bookmark-controls {
+    display: flex;
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    text-align: left;
+}
+
+/* Add hover effect */
+.hover-button:hover + .hover-content,
+.hover-content:hover {
+    visibility: visible;
+}
+
+.hover-content {
+    visibility: hidden;
+}

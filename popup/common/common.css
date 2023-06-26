@@ -1,0 +1,7 @@
+.title {
+    display:block;
+
+    font-family: var(--setFont);
+    font-size: 15px;
+    font-weight: bold;
+}

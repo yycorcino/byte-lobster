@@ -1,29 +1,5 @@
-import { getActiveTabURL, jsonToString } from "../assets/utils.js";
-
-const sendToContentScripts = async (
-  command,
-  data = "noData",
-  fileName = "noFileName",
-  btnName
-) => {
-  // determine which tab to send message
-  let queryOptions = { active: true, currentWindow: true };
-  let tabs = await chrome.tabs.query(queryOptions);
-
-  let callObj = { command: command };
-  if (data !== "noData" && fileName === "noFileName") {
-    callObj = { command: command, data: data };
-  } else callObj = { command: command, data: data, fileName: fileName };
-
-  // sends message to tab specific contentScripts.js
-  chrome.tabs.sendMessage(tabs[0].id, callObj, function (response) {
-    if (chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError);
-    } else {
-      console.log(`${btnName} - ${response.status}`);
-    }
-  });
-};
+import { getActiveTabURL } from "../assets/utils.js";
+import { sendToContentScripts } from "./common/common.js";
 
 const restGRegBtn = document.getElementById("resetGReg");
 restGRegBtn.onclick = async function (e) {
@@ -112,150 +88,11 @@ const removeAlert = () => {
   };
 };
 
-const deleteAllBookmarks = () => {
-  // check if bookmark exists
-  var titles = document.querySelectorAll("span.title");
-  var titleIsHere = false;
-
-  titles.forEach((title) => {
-    if (title.textContent === "Your Bookmarks:") {
-      titleIsHere = true;
-      title.parentElement.removeChild(title);
-    }
-  });
-
-  if (titleIsHere) {
-    var bookmarks = document.querySelectorAll(".bookmark-container");
-    bookmarks.forEach((bookmark) => {
-      bookmark.parentElement.removeChild(bookmark);
-    });
-  }
-};
-
-const addAllBookmarks = () => {
-  chrome.storage.sync.get("bookmarks", function (result) {
-    var bookmarks = result.bookmarks;
-    const bookmarkLength = Object.keys(bookmarks).length;
-
-    if (bookmarkLength > 0) {
-      const bookmarkTitle = document.createElement("span");
-      bookmarkTitle.className = "title";
-      bookmarkTitle.style.paddingTop = "7px";
-      bookmarkTitle.innerHTML = "Your Bookmarks:";
-
-      const mainTab = document.querySelector("#mainTab");
-      mainTab.appendChild(bookmarkTitle);
-
-      const allKeys = Object.keys(bookmarks);
-      for (let i = 0; i < bookmarkLength; i++) {
-        createBookmarks(allKeys[i]);
-      }
-    }
-  });
-};
-
-const createBookmarks = (fileKey) => {
-  const mainTab = document.querySelector("#mainTab");
-
-  const newBookmarkContainer = document.createElement("div");
-  const bookmarkTitleElement = document.createElement("div");
-  const controlElements = document.createElement("div");
-
-  const onlyNumbers = /^\d+$/;
-  if (onlyNumbers.test(fileKey)) {
-    bookmarkTitleElement.textContent = "Bookmark #: " + fileKey;
-  } else {
-    bookmarkTitleElement.textContent = fileKey;
-  }
-  bookmarkTitleElement.className = "bookmark-title";
-  controlElements.className = "bookmark-controls";
-
-  setBookmarkControls("preview", "#3399CC", onPreview, controlElements);
-  setBookmarkControls("paste", "#238637", onPaste, controlElements);
-  setBookmarkControls("delete", "#FA5744", onDelete, controlElements);
-
-  newBookmarkContainer.id = "bookmark-" + fileKey;
-  newBookmarkContainer.className = "bookmark-container";
-
-  newBookmarkContainer.appendChild(bookmarkTitleElement);
-  newBookmarkContainer.appendChild(controlElements);
-  mainTab.appendChild(newBookmarkContainer);
-};
-
-const setBookmarkControls = (
-  src,
-  fillColor,
-  eventListener,
-  controlParentElem
-) => {
-  const controlElement = document.createElement("i");
-
-  // get svgFile
-  const svgFilePath = "../assets/images/" + src + ".svg";
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", svgFilePath, true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      controlElement.innerHTML = xhr.responseText;
-    }
-  };
-  xhr.send();
-
-  controlElement.className = "icon";
-  controlElement.title = src.charAt(0) + src.slice(1);
-  controlElement.addEventListener("click", eventListener);
-  controlElement.style.backgroundColor = fillColor;
-  controlParentElem.appendChild(controlElement);
-};
-
-const onPreview = async (e) => {
-  console.log("onPreview");
-};
-
-const onPaste = async (e) => {
-  const textContent = e.target
-    .closest(".bookmark-container")
-    .textContent.trim();
-  const bookmarkFileName = textContent.replace("Bookmark #: ", "Bookmark-");
-
-  const { id, key } = getBookmarkIdAndKey(e);
-  chrome.storage.sync.get("bookmarks", function (result) {
-    const bookmark = result.bookmarks;
-    console.log(bookmark[key]);
-    sendToContentScripts(
-      "pasteCodeToAssembler",
-      bookmark[key],
-      bookmarkFileName,
-      "play-button-" + id
-    );
-  });
-};
-
-const getBookmarkIdAndKey = (elem) => {
-  const id = elem.target.closest(".bookmark-container").id;
-  const key = id.slice(9);
-  return { id, key };
-};
-
-const onDelete = async (e) => {
-  const { id, key } = getBookmarkIdAndKey(e);
-  const bookmarkElementToDelete = document.getElementById(id);
-  bookmarkElementToDelete.parentNode.removeChild(bookmarkElementToDelete);
-
-  chrome.storage.sync.get("bookmarks", function (result) {
-    var newBookmark = result.bookmarks;
-    delete newBookmark[key];
-    console.log(newBookmark);
-    chrome.storage.sync.set({ bookmarks: newBookmark }, null);
-  });
-  // if no more bookmarks remove the title bar
-};
-
 document.addEventListener("DOMContentLoaded", async () => {
   const settingsTab = document.getElementById("settingsTab");
   const settingsBtn = document.getElementById("settings");
   settingsBtn.onclick = async function (e) {
-    deleteAllBookmarks();
+    document.dispatchEvent(new CustomEvent("activateDeleteAllBookmarks"));
     mainTab.style.transform = "translateX(-100%)";
     settingsTab.classList.add("active");
     mainTab.classList.remove("active");
@@ -267,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     mainTab.style.transform = "translateX(0%)";
     mainTab.classList.add("active");
     settingsTab.classList.remove("active");
-    addAllBookmarks();
+    document.dispatchEvent(new CustomEvent("activateAddAllBookmarks"));
   };
 
   const fileNameInput = document.querySelector("#newFileName");
@@ -297,13 +134,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         fileNameInput.value = "";
         createAlert("failed");
       }
-    }
-  });
-
-  // dynamically update bookmarks
-  chrome.storage.sync.get("bookmarks", function (result) {
-    if (result.bookmarks[0]) {
-      addAllBookmarks();
     }
   });
 

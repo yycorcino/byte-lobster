@@ -8,28 +8,8 @@
         // send to background.js to know this website load is the website to paste code
         chrome.runtime.sendMessage({ command: "waitThenPaste" });
       }
-
-      if (event.data.type === "storeBookmarkCode") {
-        storeBookmarkCode(event.data.data);
-      }
     }
   });
-
-  const storeBookmarkCode = (jsonData) => {
-    chrome.storage.sync.get("bookmarks", function (result) {
-      var newBookmark = result.bookmarks;
-      var newKey = 0;
-      if (Object.keys(newBookmark).length > 0) {
-        const keys = Object.keys(newBookmark);
-        newKey = keys[keys.length - 1];
-        newKey = +newKey + 1;
-      }
-
-      newBookmark[newKey] = jsonData;
-      chrome.storage.sync.set({ bookmarks: newBookmark }, null);
-      console.log(newBookmark);
-    });
-  };
 
   const runPageActions = (request) => {
     switch (request.command) {

@@ -4,11 +4,14 @@
   </head>
 
   <body>
+    <link href="common/common.css" rel="stylesheet" type="text/css" />
     <link href="popup.css" rel="stylesheet" type="text/css" />
     <script type="module" src="popup.js"></script>
+    <link href="./bookmark/bookmark.css" rel="stylesheet" type="text/css" />
+    <script type="module" src="./bookmark/bookmark.js"></script>
 
     <div class="tab-container">
-      <div id = "mainTab" class="tab-content active">
+      <div class="tab-content active" id = "mainTab">
         <div class="toolbar">
           <i class="icon" id="refresh" title="Keep Code and Refresh">
             <svg viewBox="0 0 1536 1536"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -22,13 +25,13 @@
           </i>       
         </div>
 
-        <span class="title">Choose An Action:</span>
+        <span class="title" id="actionTitle">Choose An Action:</span>
 
         <button class="btn" id="resetGReg">Reset General Purpose Registers</button>
         <button class="btn" id="saveToText">Save Code To Text File</button>
       </div>
 
-      <div id="settingsTab" class="tab-content">
+      <div class="tab-content" id="settingsTab">
         <div class="toolbar">
           <i class="icon" id="goToMainTab" title="Main Tab"> 
             <svg viewBox="0 0 320 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -43,7 +46,7 @@
           </i>  
         </div>     
 
-        <span class="title">Update File Name:</span>
+        <span class="title" id="updateFileTitle">Update File Name:</span>
         <div class="form">
           <label>File Name:</label>
           <input type="text" id="newFileName" placeholder=""><br>
