@@ -39,13 +39,14 @@ const addAllBookmarks = () => {
       bookmarkTitle.style.paddingTop = "7px";
       bookmarkTitle.innerHTML = "Your Bookmarks:";
 
-      const mainTab = document.querySelector("#mainTab");
-      mainTab.appendChild(bookmarkTitle);
-
       const allKeys = Object.keys(bookmarkDict);
       for (let i = 0; i < bookmarkDictLength; i++) {
         createBookmarks(allKeys[i]);
       }
+
+      const mainTab = document.querySelector("#mainTab");
+      const referElem = document.querySelector(".scroll-bookmark");
+      mainTab.insertBefore(bookmarkTitle, referElem);
     }
   });
 };
@@ -124,6 +125,15 @@ const setBookmarkControls = (
   controlParentElem.appendChild(controlElement);
 };
 
+const deletePreview = () => {
+  // if preview is clicked there is a modal
+  // i want to delete modal, so every time a modal is loaded
+  // only one modal exist
+  //
+  // - delete modal
+  // - update that modal button to revert back to onPreviewRemove
+};
+
 const createAndShowPreview = async (e) => {
   const bookmarkContainer =
     e.target.parentNode.parentNode.parentNode.parentNode;
@@ -135,6 +145,9 @@ const createAndShowPreview = async (e) => {
   contentDiv.className = "modal-content";
   modalDiv.appendChild(contentDiv);
 
+
+  // add a way to scroll preview
+  // need to create id for preview to reference
   const previewTag = document.createElement("pre");
   const { key } = getBookmarkIdentifier(e);
   getAssemblyCode(key)

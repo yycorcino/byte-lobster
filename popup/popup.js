@@ -70,16 +70,16 @@ const createAlert = (type) => {
 const removeAlert = () => {
   var closeBtn = document.querySelector("div.alert-container .alert-close-btn");
 
-  // remove in 4 secs
-  // setTimeout(function () {
-  //   var div = closeBtn.parentNode.parentNode;
-  //   setTimeout(function () {
-  //     div.style.opacity = "0";
-  //     if (div.parentNode) {
-  //       div.parentNode.removeChild(div);
-  //     }
-  //   }, 400);
-  // }, 4000);
+  //   remove in 4 secs
+  setTimeout(function () {
+    var div = closeBtn.parentNode.parentNode;
+    setTimeout(function () {
+      div.style.opacity = "0";
+      if (div.parentNode) {
+        div.parentNode.removeChild(div);
+      }
+    }, 400);
+  }, 4000);
 
   // option to close before 4 secs
   closeBtn.onclick = function () {
