@@ -13,6 +13,11 @@
     margin-bottom: 7px;
 }
 
+.bookmark-content.active{
+    border-bottom-color: yellow;
+    border-bottom-width: 1px;
+}
+
 .bookmark-title {
     padding-left: 2px;
 }
@@ -33,5 +38,10 @@
 
 .scroll-bookmark {
     max-height: 200px;
+    overflow-y: auto;
+}
+
+pre {
+    max-height: 125px;
     overflow-y: auto;
 }

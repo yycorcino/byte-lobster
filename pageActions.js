@@ -6,15 +6,23 @@ window.addEventListener("message", function (event) {
     }
 
     if (event.data.type === "activateDownloadCode") {
-      findAssemblyCode();
-      const targetAssemblyCode = jsonToString(generateJsonString());
+      var targetAssemblyCode;
+      console.log(!event.data.data);
+      if (event.data.code) {
+        targetAssemblyCode = jsonToString(event.data.code);
+      } else {
+        findAssemblyCode();
+        targetAssemblyCode = jsonToString(generateJson());
+      }
+
       downloadText(targetAssemblyCode, event.data.fileName);
+      console.log("recieved");
     }
 
     if (event.data.type === "activateRefresh") {
       // sends to contentScripts.js
       window.postMessage(
-        { type: "storeAssemblyCode", data: generateJsonString() },
+        { type: "storeAssemblyCode", data: generateJson() },
         "*"
       );
 
@@ -28,7 +36,7 @@ window.addEventListener("message", function (event) {
     if (event.data.type === "bookmarkCode") {
       // sends to contentScripts.js
       window.postMessage(
-        { type: "storeBookmarkCode", data: generateJsonString() },
+        { type: "storeBookmarkCode", data: generateJson() },
         "*"
       );
     }
@@ -64,7 +72,7 @@ const findRegisterDiv = () => {
   }
 };
 
-const generateJsonString = () => {
+const generateJson = () => {
   let elem = document.querySelector("#qasm_cm div.CodeMirror-code");
   const sTxt = {};
   captureText(elem, sTxt);

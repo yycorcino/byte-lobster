@@ -11,7 +11,7 @@
       {
         "matches": ["https://cpulator.01xz.net/?sys=arm"],
         "run_at": "document_end",
-        "js": ["contentScripts.js", "bookmarkScripts.js"]
+        "js": ["/scripts/contentScripts.js", "/scripts/bookmarkScripts.js"]
       }
   ],
   "web_accessible_resources": [{

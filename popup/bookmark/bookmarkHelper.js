@@ -20,25 +20,56 @@ const convertJsonToString = (sTxt) => {
   }
 };
 
-const createFileName = (element) => {
-  if (element.target.closest(".bookmark-content")) {
-    const textContent = element.target
-      .closest(".bookmark-content")
-      .textContent.trim();
+const createFileName = (e) => {
+  const bookmark = e.target.closest(".bookmark-content");
+  if (bookmark) {
+    const textContent = bookmark.textContent.trim();
     const bookmarkFileName = textContent.replace("Bookmark #: ", "Bookmark-");
     return bookmarkFileName;
   }
 };
 
-const getBookmarkIdentifier = (element) => {
-  const id = element.target.closest(".bookmark-content").id;
+const getBookmarkIdentifier = (e) => {
+  const id = e.target.closest(".bookmark-content").id;
   const key = id.slice(9);
   return { id, key };
 };
 
-const removeModal = () => {
-  const modalElement = document.getElementById("modal");
-  modalElement.remove();
+const updateBookmarkAppearance = async (e, base = 0) => {
+  var bookmark = e;
+  if (base === 0) {
+    bookmark = e.target.parentNode.parentNode;
+  }
+
+  const classList = bookmark.classList;
+  var active = classList.contains("active");
+
+  if (active) {
+    bookmark.classList.remove("active");
+  } else {
+    bookmark.classList.add("active");
+  }
 };
 
-export { getAssemblyCode, createFileName, removeModal, getBookmarkIdentifier };
+const removeModalContent = () => {
+  const modalContent = document.querySelector(".modal-content");
+  if (modalContent) {
+    modalContent.remove();
+  }
+};
+
+const deleteAllBookmarks = () => {
+  var bookmarkContainer = document.querySelector(".bookmark-container");
+  if (bookmarkContainer) {
+    bookmarkContainer.parentElement.removeChild(bookmarkContainer);
+  }
+};
+
+export {
+  getAssemblyCode,
+  createFileName,
+  getBookmarkIdentifier,
+  updateBookmarkAppearance,
+  removeModalContent,
+  deleteAllBookmarks,
+};
