@@ -2,7 +2,7 @@ import { sendToContentScripts } from "../common/common.js";
 import {
   getAssemblyCode,
   createFileName,
-  closeModal,
+  removeModal,
   getBookmarkIdentifier,
 } from "./bookmarkHelper.js";
 
@@ -20,7 +20,7 @@ const deleteAllBookmarks = () => {
 
   if (title) {
     title.parentElement.removeChild(title);
-    var bookmarkNodeList = document.querySelectorAll(".bookmark-container");
+    var bookmarkNodeList = document.querySelectorAll(".bookmark-content");
     bookmarkNodeList.forEach((bookmark) => {
       bookmark.parentElement.removeChild(bookmark);
     });
@@ -52,7 +52,7 @@ const addAllBookmarks = () => {
 
 const createBookmarks = (key) => {
   const bookmarkContainer = document.createElement("div");
-  bookmarkContainer.className = "bookmark-container";
+  bookmarkContainer.className = "bookmark-content";
   bookmarkContainer.id = "bookmark-" + key;
 
   const bookmarkTitle = document.createElement("div");
@@ -66,15 +66,29 @@ const createBookmarks = (key) => {
 
   const controlElementsDiv = document.createElement("div");
   controlElementsDiv.className = "bookmark-controls";
-  setBookmarkControls("preview", "#3399CC", "NA", controlElementsDiv);
+  setBookmarkControls(
+    "preview",
+    "#3399CC",
+    onPreviewRemove,
+    controlElementsDiv
+  );
   setBookmarkControls("paste", "#238637", onPaste, controlElementsDiv);
   setBookmarkControls("delete", "#FA5744", onDelete, controlElementsDiv);
 
-  // append to bookmarkContainer then append to mainTab
+  // append to bookmark content to scroll and scroll to mainTab
+  var bookmarkScrollWindow = document.querySelector(".scroll-bookmark");
+  const mainTab = document.querySelector("#mainTab");
+
   bookmarkContainer.appendChild(bookmarkTitle);
   bookmarkContainer.appendChild(controlElementsDiv);
-  const mainTab = document.querySelector("#mainTab");
-  mainTab.appendChild(bookmarkContainer);
+  if (!bookmarkScrollWindow) {
+    bookmarkScrollWindow = document.createElement("div");
+    bookmarkScrollWindow.className = "scroll-bookmark";
+    bookmarkScrollWindow.appendChild(bookmarkContainer);
+    mainTab.appendChild(bookmarkScrollWindow);
+  } else {
+    bookmarkScrollWindow.appendChild(bookmarkContainer);
+  }
 };
 
 const setBookmarkControls = (
@@ -85,6 +99,7 @@ const setBookmarkControls = (
 ) => {
   const controlElement = document.createElement("i");
   controlElement.className = "icon";
+  controlElement.id = src;
   controlElement.title = src.charAt(0).toUpperCase() + src.slice(1);
   controlElement.style.backgroundColor = fillColor;
 
@@ -99,21 +114,21 @@ const setBookmarkControls = (
   };
   xhr.send();
 
-  // preview has special event listeners
+  // preview is special
   if (src === "preview") {
     controlElement.addEventListener("mouseenter", createAndShowPreview);
-    controlElement.addEventListener("mouseleave", closeModal);
-  } else {
-    controlElement.addEventListener("click", eventListener);
+    controlElement.addEventListener("mouseleave", removeModal);
   }
+
+  controlElement.addEventListener("click", eventListener);
   controlParentElem.appendChild(controlElement);
 };
 
 const createAndShowPreview = async (e) => {
-  const bookmarkContainer = e.target.parentNode.parentNode.parentNode;
+  const bookmarkContainer =
+    e.target.parentNode.parentNode.parentNode.parentNode;
   const modalDiv = document.createElement("div");
   modalDiv.id = "modal";
-  modalDiv.onmouseleave = closeModal;
   bookmarkContainer.appendChild(modalDiv);
 
   const contentDiv = document.createElement("div");
@@ -128,8 +143,26 @@ const createAndShowPreview = async (e) => {
       contentDiv.appendChild(previewTag);
     })
     .catch((error) => {
-      console.error(error + " from createAndShowPreview");
+      console.error(error + " from createAndShowPreview bookmark");
     });
+};
+
+const onPreviewRemove = async (e) => {
+  const element = e.target.parentNode;
+  element.removeEventListener("mouseenter", createAndShowPreview);
+  element.removeEventListener("mouseleave", removeModal);
+  element.removeEventListener("click", onPreviewRemove);
+
+  element.addEventListener("click", onPreviewAdd);
+};
+
+const onPreviewAdd = async (e) => {
+  const element = e.target.parentNode;
+  element.addEventListener("mouseenter", createAndShowPreview);
+  element.addEventListener("mouseleave", removeModal);
+  element.removeEventListener("click", onPreviewAdd);
+
+  element.addEventListener("click", onPreviewRemove);
 };
 
 const onPaste = async (e) => {

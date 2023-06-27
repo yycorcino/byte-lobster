@@ -21,22 +21,24 @@ const convertJsonToString = (sTxt) => {
 };
 
 const createFileName = (element) => {
-  const textContent = element.target
-    .closest(".bookmark-container")
-    .textContent.trim();
-  const bookmarkFileName = textContent.replace("Bookmark #: ", "Bookmark-");
-  return bookmarkFileName;
+  if (element.target.closest(".bookmark-content")) {
+    const textContent = element.target
+      .closest(".bookmark-content")
+      .textContent.trim();
+    const bookmarkFileName = textContent.replace("Bookmark #: ", "Bookmark-");
+    return bookmarkFileName;
+  }
 };
 
 const getBookmarkIdentifier = (element) => {
-  const id = element.target.closest(".bookmark-container").id;
+  const id = element.target.closest(".bookmark-content").id;
   const key = id.slice(9);
   return { id, key };
 };
 
-const closeModal = () => {
+const removeModal = () => {
   const modalElement = document.getElementById("modal");
   modalElement.remove();
 };
 
-export { getAssemblyCode, createFileName, closeModal, getBookmarkIdentifier };
+export { getAssemblyCode, createFileName, removeModal, getBookmarkIdentifier };

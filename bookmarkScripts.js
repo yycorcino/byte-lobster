@@ -19,7 +19,6 @@
 
       newBookmark[newKey] = jsonData;
       chrome.storage.sync.set({ bookmarks: newBookmark }, null);
-      console.log(newBookmark);
     });
   };
 

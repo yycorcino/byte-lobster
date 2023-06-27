@@ -1,5 +1,5 @@
 
-.bookmark-container {
+.bookmark-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,19 +21,6 @@
     display: flex;
 }
 
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
 .modal-content {
     background-color: #fff;
     margin: 10% auto;
@@ -44,12 +31,7 @@
     text-align: left;
 }
 
-/* Add hover effect */
-.hover-button:hover + .hover-content,
-.hover-content:hover {
-    visibility: visible;
-}
-
-.hover-content {
-    visibility: hidden;
+.scroll-bookmark {
+    max-height: 200px;
+    overflow-y: auto;
 }

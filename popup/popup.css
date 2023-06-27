@@ -13,7 +13,7 @@ body {
     justify-content: center;
     position:relative;
     width: 300px;
-    max-height: 100px;
+    max-height: 360px;
     color: #314d3e;
 }
 
@@ -22,8 +22,6 @@ body {
     align-items: center;
     justify-content: center;
 
-    /* height: fit-content; */
-    max-height: 100px;
     position: absolute;
     visibility: hidden;
     transition: opacity 0.6s, transform 0.5s;
@@ -36,7 +34,6 @@ body {
 
 .tab-content.active {
     height: auto;
-    max-height: 100px;
     width:100%; 
     visibility: visible;
     transform: translateX(0%);
@@ -103,25 +100,39 @@ span {
     font-size: 100px;
 }
 
-.alert {
+.alert-wrapper {
     margin-top: 5px;
-    padding: 20px;
-    background-color: #f44336;
-    color: white;
-    opacity: 1;
-    transition: opacity 0.6s;
-    margin-bottom: 15px;
+    height: 75px;
 }
 
-.alert.success {
+.alert-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    padding: 20px;
+    opacity: 1;
+    color: white;
+    background-color: #f44336;
+    transition: opacity 0.6s;
+}
+
+.alert-container.success {
     background-color: #04AA6D;
 }
 
+.alert-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .alert-close-btn {
+    display: flex;
+    align-items: center;
     margin-left: 15px;
     color: white;
     font-weight: bold;
-    float: right;
     font-size: 22px;
     line-height: 20px;
     cursor: pointer;

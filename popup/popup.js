@@ -38,49 +38,52 @@ settingsBtn.onclick = async function (e) {
 };
 
 const createAlert = (type) => {
-  let alertDiv = document.querySelector("div.alert");
-
-  if (!alertDiv) {
-    alertDiv = document.createElement("div");
-  } else {
-    alertDiv.remove();
+  var alertWrapper = document.querySelector("div.alert-wrapper");
+  if (alertWrapper) {
+    alertWrapper.remove();
   }
 
+  var alertDiv = document.createElement("div");
+
+  alertWrapper = document.createElement("div");
+  alertWrapper.className = "alert-wrapper";
+  alertWrapper.appendChild(alertDiv);
+
   if (type === "success") {
-    alertDiv.classList.add("alert", "success");
+    alertDiv.classList.add("alert-container", "success");
     alertDiv.innerHTML = `
+      <span class="alert-message"><strong>Success!</strong>&nbsp;File Name is Updated.</span>
       <span class="alert-close-btn">&times;</span>
-      <strong>Success!</strong> File Name is Updated.
     `;
   } else {
-    alertDiv.className = "alert";
+    alertDiv.className = "alert-container";
     alertDiv.innerHTML = `
+      <span class="alert-message"><strong>Danger!</strong>&nbsp;File Name is Invalid.</span>
       <span class="alert-close-btn">&times;</span>
-      <strong>Danger!</strong> File Name is Invalid.
     `;
   }
   const settingsTab = document.querySelector("#settingsTab");
-  settingsTab.appendChild(alertDiv);
+  settingsTab.appendChild(alertWrapper);
   removeAlert();
 };
 
 const removeAlert = () => {
-  var closeBtn = document.querySelector("div.alert .alert-close-btn");
+  var closeBtn = document.querySelector("div.alert-container .alert-close-btn");
 
   // remove in 4 secs
-  setTimeout(function () {
-    var div = closeBtn.parentElement;
-    div.style.opacity = "0";
-    setTimeout(function () {
-      if (div.parentNode) {
-        div.parentNode.removeChild(div);
-      }
-    }, 400);
-  }, 4000);
+  // setTimeout(function () {
+  //   var div = closeBtn.parentNode.parentNode;
+  //   setTimeout(function () {
+  //     div.style.opacity = "0";
+  //     if (div.parentNode) {
+  //       div.parentNode.removeChild(div);
+  //     }
+  //   }, 400);
+  // }, 4000);
 
   // option to close before 4 secs
   closeBtn.onclick = function () {
-    var div = this.parentElement;
+    var div = this.parentNode.parentNode;
     div.style.opacity = "0";
     setTimeout(function () {
       div.parentNode.removeChild(div);
