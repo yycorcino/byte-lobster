@@ -34,6 +34,47 @@ const addAllBookmarks = () => {
       downloadBtn.textContent = "Download All Bookmarks";
       bookmarksContainer.appendChild(downloadBtn);
 
+      const downloadElemBtn = document.getElementById("downloadAllBookmarks");
+      downloadElemBtn.onclick = async function (e) {
+        sendToContentScripts("downloadAllBookmarks", "downloadAllBookmarks");
+        // const bookmarkFileName = createFileName(e);
+
+        // const { id, key } = getBookmarkIdentifier(e);
+        chrome.storage.sync.get("bookmarks", function (result) {
+          const bookmarkDict = result.bookmarks;
+
+          // condense all json to one json
+          var mergedData = {};
+          const bookmarkDictLength = Object.keys(bookmarkDict).length;
+          for (let i = 0; bookmarkDictLength > i; i++) {
+            var jsonObj = bookmarkDict[i];
+            for (var key in jsonObj) {
+              if (jsonObj.hasOwnProperty(key)) {
+                var keys = Object.keys(bookmarkDict);
+                keys.sort();
+                var largestKey = keys[keys.length - 1];
+
+                if (mergedData[key]) {
+                  console.log(largestKey);
+                } else {
+                  mergedData[key] = jsonObj[key];
+                }
+              }
+            }
+          }
+
+          console.log(mergedData);
+
+          //   const btnName = "download-button-" + id;
+          //   sendToContentScripts(
+          //     "downloadAllBookmarks",
+          //     jsonCode,
+          //     bookmarkFileName,
+          //     btnName
+          //   );
+        });
+      };
+
       const bookmarkContainerHeading = document.createElement("span");
       bookmarkContainerHeading.className = "title";
       bookmarkContainerHeading.id = "bookmarkHeading";
@@ -209,13 +250,16 @@ const mouseLeavePreview = async (e) => {
 const onPaste = async (e) => {
   const bookmarkFileName = createFileName(e);
 
-  const { key } = getBookmarkIdentifier(e);
+  const { id, key } = getBookmarkIdentifier(e);
   chrome.storage.sync.get("bookmarks", function (result) {
     const bookmarkDict = result.bookmarks;
+    const jsonCode = bookmarkDict[key];
+    const btnName = "play-button-" + id;
     sendToContentScripts(
       "pasteCodeToAssembler",
-      bookmarkDict[key],
-      bookmarkFileName
+      jsonCode,
+      bookmarkFileName,
+      btnName
     );
   });
 };
@@ -245,15 +289,18 @@ const onDelete = async (e) => {
 const onDownload = async (e) => {
   const bookmarkFileName = createFileName(e);
 
-  // const { key } = getBookmarkIdentifier(e);
-  // chrome.storage.sync.get("bookmarks", function (result) {
-  //   const bookmarkDict = result.bookmarks;
-  //   sendToContentScripts(
-  //     "saveToText",
-  //     bookmarkDict[key],
-  //     bookmarkFileName
-  //   );
-  // });
+  const { id, key } = getBookmarkIdentifier(e);
+  chrome.storage.sync.get("bookmarks", function (result) {
+    const bookmarkDict = result.bookmarks;
+    const jsonCode = bookmarkDict[key];
+    const btnName = "download-button-" + id;
+    sendToContentScripts(
+      "dynamicSaveToText",
+      jsonCode,
+      bookmarkFileName,
+      btnName
+    );
+  });
 };
 
 document.addEventListener("DOMContentLoaded", async () => {

@@ -25,7 +25,23 @@
             "*"
           );
         });
+        break;
 
+      case "dynamicSaveToText":
+        console.log(request.data);
+        console.log(request.fileName);
+        window.postMessage(
+          {
+            type: "activateDownloadCode",
+            data: request.data,
+            fileName: request.fileName,
+          },
+          "*"
+        );
+        break;
+
+      case "downloadAllBookmarks":
+        console.log("got it");
         break;
 
       case "refresh":

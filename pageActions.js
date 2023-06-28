@@ -8,15 +8,14 @@ window.addEventListener("message", function (event) {
     if (event.data.type === "activateDownloadCode") {
       var targetAssemblyCode;
       console.log(!event.data.data);
-      if (event.data.code) {
-        targetAssemblyCode = jsonToString(event.data.code);
+      if (event.data.data) {
+        targetAssemblyCode = jsonToString(event.data.data);
       } else {
         findAssemblyCode();
         targetAssemblyCode = jsonToString(generateJson());
       }
 
       downloadText(targetAssemblyCode, event.data.fileName);
-      console.log("recieved");
     }
 
     if (event.data.type === "activateRefresh") {
