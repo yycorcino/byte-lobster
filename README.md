@@ -96,7 +96,7 @@
 
 <br />
 
-**Welcome to the project of Byte Lobster!**
+<span style="font-size: 24px;">**Welcome to the Project of Byte Lobster!**</span>
 
 This powerful Chrome Extension was designed with one goal in mind: to simplify your workflow by automating simple repetitive task with a click of a button. Gone are the days of manually performing these repetitive and time-consuming tasks. With my extension, you can effortlessly clear general registers with just a click, ensuring a fresh register start for your coding. Moreover, you can conveniently save your valuable code to text files, allowing you to organize and access them whenever needed. I understand the frustration of performing these tasks manually, which is why I created this extension. I hated pressing on the registers and inputting 0 for each register I wanted to clear. Say goodbye to tedious processes and hello to Assembly programming. Try it out now and experience the efficiency you've been wanting!
 
