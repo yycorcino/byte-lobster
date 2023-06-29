@@ -47,6 +47,12 @@
 
 ## About The Project
 
+<div align="center">
+    <div style="display: flex; align-items: center;">
+        <img src="https://github.com/yycorcino/byte-lobster/blob/media/chrome-ext-img4.png" style="display: inline-block; margin-right: 10px;">
+    </div>
+</div>
+
 <table>
     <thead>
         <tr>
@@ -68,7 +74,6 @@
 
 <div align="center">
     <div style="display: flex; align-items: center;">
-        <img src="https://github.com/yycorcino/byte-lobster/blob/media/chrome-ext-img4.png" width="290" height="250" style="display: inline-block; margin-right: 10px;">
         <table style="display: inline-block;">
             <thead>
                 <tr>
