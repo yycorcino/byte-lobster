@@ -3,17 +3,17 @@ import { sendToContentScripts } from "./common/common.js";
 
 const restGRegBtn = document.getElementById("resetGReg");
 restGRegBtn.onclick = async function (e) {
-  sendToContentScripts("resetGReg", "restGRegBtn");
+  sendToContentScripts(1, "activateClearGReg", "restGRegBtn");
 };
 
 const saveToTextBtn = document.getElementById("saveToText");
 saveToTextBtn.onclick = async function (e) {
-  sendToContentScripts("saveToText", "saveToTextBtn");
+  sendToContentScripts(1, "activateDOMDownload", "saveToTextBtn");
 };
 
 const refreshBtn = document.getElementById("refresh");
 refreshBtn.onclick = async function (e) {
-  sendToContentScripts("refresh", "refreshBtn");
+  sendToContentScripts(1, "refresh", "refreshBtn");
 };
 
 const settingsBtn = document.getElementById("settingsPage");
@@ -44,7 +44,6 @@ const createAlert = (type) => {
   }
 
   var alertDiv = document.createElement("div");
-
   alertWrapper = document.createElement("div");
   alertWrapper.className = "alert-wrapper";
   alertWrapper.appendChild(alertDiv);
@@ -124,11 +123,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         !invalidCharacters.test(fileNameInput.value) &&
         !invalidSpaces.test(fileNameInput.value)
       ) {
-        sendToContentScripts(
-          "updateFileName",
-          fileNameInput.value,
-          "fileNameInput"
-        );
+        const format = 3;
+        const command = "updateFileName";
+        const data = fileNameInput.value;
+        const btnName = "fileNameInput";
+        sendToContentScripts(format, command, data, btnName);
 
         fileNameInput.placeholder = fileNameInput.value;
         fileNameInput.value = "";

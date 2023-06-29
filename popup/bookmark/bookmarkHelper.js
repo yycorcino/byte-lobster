@@ -43,11 +43,18 @@ const updateBookmarkAppearance = async (e, base = 0) => {
 
   const classList = bookmark.classList;
   var active = classList.contains("active");
+  bookmark.classList.toggle("active", !active);
+};
 
-  if (active) {
-    bookmark.classList.remove("active");
-  } else {
-    bookmark.classList.add("active");
+const removeOtherBookmarkState = async () => {
+  const activeBookmark = document.querySelector(".bookmark-content.active");
+  if (activeBookmark) {
+    removeModalContent();
+
+    const iElement = document.querySelector(".bookmark-content.active i");
+    addMouseEvents(iElement, 1);
+
+    await updateBookmarkAppearance(activeBookmark, 1);
   }
 };
 
@@ -65,11 +72,77 @@ const deleteAllBookmarks = () => {
   }
 };
 
+const addMouseEvents = async (e, base = 0) => {
+  /*
+  When activate the element,
+  mouseenter connected to enterPreview
+  mouseleave connected to leavePreview
+  click connected to onPreviewAddClick
+  */
+  var element = e;
+  if (base === 0) {
+    element = e.target.parentNode;
+  }
+
+  if (element.tagName === "I") {
+    element.addEventListener("mouseenter", mouseEnterPreview);
+    element.addEventListener("mouseleave", mouseLeavePreview);
+    element.removeEventListener("click", addMouseEvents);
+    element.addEventListener("click", removeMouseEvents);
+  }
+};
+
+const removeMouseEvents = async (e, base = 0) => {
+  /*
+  When activate the element,
+  click connected to onPreviewAddClick
+  */
+  var element = e;
+  if (base === 0) {
+    element = e.target.parentNode;
+  }
+
+  if (element.tagName === "I") {
+    element.removeEventListener("mouseenter", mouseEnterPreview);
+    element.removeEventListener("mouseleave", mouseLeavePreview);
+    element.removeEventListener("click", removeMouseEvents);
+    element.addEventListener("click", addMouseEvents);
+  }
+};
+
+const mouseEnterPreview = async (e) => {
+  // only one bookmark can be active at a time
+  await removeOtherBookmarkState();
+  updateBookmarkAppearance(e);
+
+  const modalDiv = document.querySelector("#modal");
+  const contentDiv = document.createElement("div");
+  contentDiv.className = "modal-content";
+  modalDiv.appendChild(contentDiv);
+
+  const { key } = getBookmarkIdentifier(e);
+  const previewTag = document.createElement("pre");
+  getAssemblyCode(key)
+    .then((codeString) => {
+      previewTag.textContent = codeString;
+      contentDiv.appendChild(previewTag);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+const mouseLeavePreview = async (e) => {
+  updateBookmarkAppearance(e);
+  removeModalContent();
+};
+
 export {
-  getAssemblyCode,
   createFileName,
   getBookmarkIdentifier,
-  updateBookmarkAppearance,
   removeModalContent,
   deleteAllBookmarks,
+  removeMouseEvents,
+  mouseEnterPreview,
+  mouseLeavePreview,
 };

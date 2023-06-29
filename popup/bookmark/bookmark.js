@@ -1,20 +1,13 @@
 import { sendToContentScripts } from "../common/common.js";
 import {
-  getAssemblyCode,
   createFileName,
   getBookmarkIdentifier,
-  updateBookmarkAppearance,
   removeModalContent,
   deleteAllBookmarks,
+  removeMouseEvents,
+  mouseEnterPreview,
+  mouseLeavePreview,
 } from "./bookmarkHelper.js";
-
-document.addEventListener("activateDeleteAllBookmarks", function (event) {
-  deleteAllBookmarks();
-});
-
-document.addEventListener("activateAddAllBookmarks", function (event) {
-  addAllBookmarks();
-});
 
 const addAllBookmarks = () => {
   chrome.storage.sync.get("bookmarks", function (result) {
@@ -36,42 +29,25 @@ const addAllBookmarks = () => {
 
       const downloadElemBtn = document.getElementById("downloadAllBookmarks");
       downloadElemBtn.onclick = async function (e) {
-        sendToContentScripts("downloadAllBookmarks", "downloadAllBookmarks");
-        // const bookmarkFileName = createFileName(e);
-
-        // const { id, key } = getBookmarkIdentifier(e);
         chrome.storage.sync.get("bookmarks", function (result) {
           const bookmarkDict = result.bookmarks;
 
+          const format = 2;
+          const command = "activateDataPassDownload";
           // condense all json to one json
-          var mergedData = {};
-          const bookmarkDictLength = Object.keys(bookmarkDict).length;
-          for (let i = 0; bookmarkDictLength > i; i++) {
-            var jsonObj = bookmarkDict[i];
-            for (var key in jsonObj) {
-              if (jsonObj.hasOwnProperty(key)) {
-                var keys = Object.keys(bookmarkDict);
-                keys.sort();
-                var largestKey = keys[keys.length - 1];
-
-                if (mergedData[key]) {
-                  console.log(largestKey);
-                } else {
-                  mergedData[key] = jsonObj[key];
-                }
+          const mergedData = {};
+          for (const jsonObj of Object.values(bookmarkDict)) {
+            for (const [key, value] of Object.entries(jsonObj)) {
+              if (mergedData.hasOwnProperty(key)) {
+                const newKey = Math.max(...Object.keys(mergedData)) + 1;
+                mergedData[newKey] = value;
+              } else {
+                mergedData[key] = value;
               }
             }
           }
-
-          console.log(mergedData);
-
-          //   const btnName = "download-button-" + id;
-          //   sendToContentScripts(
-          //     "downloadAllBookmarks",
-          //     jsonCode,
-          //     bookmarkFileName,
-          //     btnName
-          //   );
+          const btnName = "downloadAllBookmarks-btn";
+          sendToContentScripts(format, command, mergedData, btnName);
         });
       };
 
@@ -84,10 +60,9 @@ const addAllBookmarks = () => {
 
       const allKeys = Object.keys(bookmarkDict);
       for (let i = 0; i < bookmarkDictLength; i++) {
-        createBookmarks(allKeys[i]);
+        createBookmark(allKeys[i]);
       }
 
-      // possible new scheme for add new elements
       bookmarksContainer.appendChild(
         Object.assign(document.createElement("div"), { id: "modal" })
       );
@@ -95,38 +70,59 @@ const addAllBookmarks = () => {
   });
 };
 
-const createBookmarks = (key) => {
+const createBookmark = (key) => {
   const bookmarkContent = document.createElement("div");
   bookmarkContent.className = "bookmark-content";
   bookmarkContent.id = "bookmark-" + key;
 
   const bookmarkTitle = document.createElement("div");
   bookmarkTitle.className = "bookmark-title";
-  const onlyNumbers = /^\d+$/;
-  if (onlyNumbers.test(key)) {
-    bookmarkTitle.textContent = "Bookmark #: " + key;
-  } else {
-    bookmarkTitle.textContent = key;
-  }
+  bookmarkTitle.textContent = "Bookmark #: " + key;
+  bookmarkContent.appendChild(bookmarkTitle);
 
   const controlElementsDiv = document.createElement("div");
   controlElementsDiv.className = "bookmark-controls";
-  setBookmarkControls(
-    "preview",
-    "#3399CC",
-    removeMouseEvents,
-    controlElementsDiv
-  );
-  setBookmarkControls("paste", "#238637", onPaste, controlElementsDiv);
-  setBookmarkControls("download", "#FF8C00", onDownload, controlElementsDiv);
-  setBookmarkControls("delete", "#FA5744", onDelete, controlElementsDiv);
+
+  const propParentElement = controlElementsDiv;
+  const previewProp = {
+    src: "preview",
+    fillColor: "#3399CC",
+    clickListener: removeMouseEvents,
+    parentElement: propParentElement,
+  };
+  const pasteProp = {
+    src: "paste",
+    fillColor: "#238637",
+    clickListener: onPaste,
+    parentElement: propParentElement,
+  };
+  const downloadProp = {
+    src: "download",
+    fillColor: "#FF8C00",
+    clickListener: onDownload,
+    parentElement: propParentElement,
+  };
+  const deleteProp = {
+    src: "delete",
+    fillColor: "#FA5744",
+    clickListener: onDelete,
+    parentElement: propParentElement,
+  };
+
+  const controlDivButtons = [previewProp, pasteProp, downloadProp, deleteProp];
+  for (const button in controlDivButtons) {
+    setBookmarkControls(
+      controlDivButtons[button].src,
+      controlDivButtons[button].fillColor,
+      controlDivButtons[button].clickListener,
+      controlDivButtons[button].parentElement
+    );
+  }
+  bookmarkContent.appendChild(controlElementsDiv);
 
   // append to bookmark content to scroll and scroll to bookmark container
   var bookmarkScrollWindow = document.querySelector(".scroll-bookmark");
   const bookmarkContainer = document.querySelector(".bookmark-container");
-
-  bookmarkContent.appendChild(bookmarkTitle);
-  bookmarkContent.appendChild(controlElementsDiv);
   if (!bookmarkScrollWindow) {
     bookmarkScrollWindow = document.createElement("div");
     bookmarkScrollWindow.className = "scroll-bookmark";
@@ -137,12 +133,7 @@ const createBookmarks = (key) => {
   }
 };
 
-const setBookmarkControls = (
-  src,
-  fillColor,
-  eventListener,
-  controlParentElem
-) => {
+const setBookmarkControls = (src, fillColor, clickListener, parentElement) => {
   const controlElement = document.createElement("i");
   controlElement.className = "icon";
   controlElement.id = src;
@@ -159,108 +150,28 @@ const setBookmarkControls = (
     }
   };
   xhr.send();
+  controlElement.addEventListener("click", clickListener);
+  parentElement.appendChild(controlElement);
 
   // preview is special
   if (src === "preview") {
     controlElement.addEventListener("mouseenter", mouseEnterPreview);
     controlElement.addEventListener("mouseleave", mouseLeavePreview);
   }
-
-  controlElement.addEventListener("click", eventListener);
-  controlParentElem.appendChild(controlElement);
-};
-
-const removeMouseEvents = async (e, base = 0) => {
-  /*
-  When activate the element,
-  click connected to onPreviewAddClick
-  */
-  var element = e;
-  if (base === 0) {
-    element = e.target.parentNode;
-  }
-
-  if (element.tagName === "I") {
-    element.removeEventListener("mouseenter", mouseEnterPreview);
-    element.removeEventListener("mouseleave", mouseLeavePreview);
-    element.removeEventListener("click", removeMouseEvents);
-    element.addEventListener("click", addMouseEvents);
-  }
-};
-
-const addMouseEvents = async (e, base = 0) => {
-  /*
-  When activate the element,
-  mouseenter connected to enterPreview
-  mouseleave connected to leavePreview
-  click connected to onPreviewAddClick
-  */
-  var element = e;
-  if (base === 0) {
-    element = e.target.parentNode;
-  }
-
-  if (element.tagName === "I") {
-    element.addEventListener("mouseenter", mouseEnterPreview);
-    element.addEventListener("mouseleave", mouseLeavePreview);
-    element.removeEventListener("click", addMouseEvents);
-    element.addEventListener("click", removeMouseEvents);
-  }
-};
-
-const removeOtherBookmarkState = async () => {
-  const activeBookmark = document.querySelector(".bookmark-content.active");
-  if (activeBookmark) {
-    removeModalContent();
-
-    const iElement = document.querySelector(".bookmark-content.active i");
-    addMouseEvents(iElement, 1);
-
-    await updateBookmarkAppearance(activeBookmark, 1);
-  }
-};
-
-const mouseEnterPreview = async (e) => {
-  // only one bookmark can be active at a time
-  await removeOtherBookmarkState();
-  updateBookmarkAppearance(e);
-
-  const modalDiv = document.querySelector("#modal");
-  const contentDiv = document.createElement("div");
-  contentDiv.className = "modal-content";
-  modalDiv.appendChild(contentDiv);
-
-  const { key } = getBookmarkIdentifier(e);
-  const previewTag = document.createElement("pre");
-  getAssemblyCode(key)
-    .then((codeString) => {
-      previewTag.textContent = codeString;
-      contentDiv.appendChild(previewTag);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-const mouseLeavePreview = async (e) => {
-  updateBookmarkAppearance(e);
-  removeModalContent();
 };
 
 const onPaste = async (e) => {
-  const bookmarkFileName = createFileName(e);
-
   const { id, key } = getBookmarkIdentifier(e);
+
   chrome.storage.sync.get("bookmarks", function (result) {
     const bookmarkDict = result.bookmarks;
-    const jsonCode = bookmarkDict[key];
+
+    const format = 2;
+    const command = "activatePasteAssemblyCode";
+    const data = bookmarkDict[key];
+    const bookmarkFileName = createFileName(e);
     const btnName = "play-button-" + id;
-    sendToContentScripts(
-      "pasteCodeToAssembler",
-      jsonCode,
-      bookmarkFileName,
-      btnName
-    );
+    sendToContentScripts(format, command, data, bookmarkFileName, btnName);
   });
 };
 
@@ -277,8 +188,8 @@ const onDelete = async (e) => {
   chrome.storage.sync.get("bookmarks", function (result) {
     var newBookmarkDict = result.bookmarks;
     delete newBookmarkDict[key];
-    chrome.storage.sync.set({ bookmarks: newBookmarkDict }, null);
 
+    chrome.storage.sync.set({ bookmarks: newBookmarkDict }, null);
     // no more bookmarks = no bookmark heading
     if (Object.keys(newBookmarkDict).length === 0) {
       deleteAllBookmarks();
@@ -287,21 +198,27 @@ const onDelete = async (e) => {
 };
 
 const onDownload = async (e) => {
-  const bookmarkFileName = createFileName(e);
-
   const { id, key } = getBookmarkIdentifier(e);
+
   chrome.storage.sync.get("bookmarks", function (result) {
     const bookmarkDict = result.bookmarks;
-    const jsonCode = bookmarkDict[key];
+
+    const format = 2;
+    const command = "activateDataPassDownload";
+    const data = bookmarkDict[key];
+    const bookmarkFileName = createFileName(e);
     const btnName = "download-button-" + id;
-    sendToContentScripts(
-      "dynamicSaveToText",
-      jsonCode,
-      bookmarkFileName,
-      btnName
-    );
+    sendToContentScripts(format, command, data, bookmarkFileName, btnName);
   });
 };
+
+document.addEventListener("activateDeleteAllBookmarks", function (event) {
+  deleteAllBookmarks();
+});
+
+document.addEventListener("activateAddAllBookmarks", function (event) {
+  addAllBookmarks();
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
   // dynamically update bookmarks

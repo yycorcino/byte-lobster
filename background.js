@@ -16,7 +16,7 @@ const waitOnloadThenPaste = (details) => {
         const codeJson = result.code;
 
         chrome.tabs.sendMessage(details.tabId, {
-          command: "pasteCodeToAssembler",
+          command: "activatePasteAssemblyCode",
           data: codeJson,
           fileName: "refresh",
         });
@@ -34,17 +34,17 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
-const bookmarkInit = (id) => {
+const activeNewEnvironment = (id) => {
   // waits for webpage to fully load -> tell bookmarkScripts.js
   setTimeout(() => {
     chrome.tabs.sendMessage(id, {
-      command: "bookmarkInit",
+      command: "activeNewEnvironment",
     });
   }, 1000);
 };
 
 chrome.webNavigation.onCommitted.addListener((details) => {
   if (details.url === "https://cpulator.01xz.net/?sys=arm") {
-    bookmarkInit(details.tabId);
+    activeNewEnvironment(details.tabId);
   }
 });

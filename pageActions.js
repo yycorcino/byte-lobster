@@ -1,41 +1,39 @@
 window.addEventListener("message", function (event) {
   if (event.source === window) {
-    if (event.data.type === "activateClearReg") {
+    if (event.data.type === "activateClearGReg") {
       findRegisterDiv();
       clearRegister();
     }
 
-    if (event.data.type === "activateDownloadCode") {
-      var targetAssemblyCode;
-      console.log(!event.data.data);
-      if (event.data.data) {
-        targetAssemblyCode = jsonToString(event.data.data);
-      } else {
-        findAssemblyCode();
-        targetAssemblyCode = jsonToString(generateJson());
-      }
+    if (event.data.type === "activateDOMDownload") {
+      findAssemblyCode();
+      const targetAssemblyCode = jsonToString(generateJson());
+      downloadText(targetAssemblyCode, event.data.fileName);
+    }
 
+    if (event.data.type === "activateDataPassDownload") {
+      const targetAssemblyCode = jsonToString(event.data.data);
       downloadText(targetAssemblyCode, event.data.fileName);
     }
 
     if (event.data.type === "activateRefresh") {
       // sends to contentScripts.js
       window.postMessage(
-        { type: "storeAssemblyCode", data: generateJson() },
+        { type: "executeTempStoreAssemblyCode", data: generateJson() },
         "*"
       );
 
       location.reload();
     }
 
-    if (event.data.type === "pasteAssemblyCode") {
+    if (event.data.type === "activatePasteAssemblyCode") {
       pasteAssemblyCode(jsonToString(event.data.data), event.data.fileName);
     }
 
-    if (event.data.type === "bookmarkCode") {
-      // sends to contentScripts.js
+    if (event.data.type === "getBookmarkCode") {
+      // sends to bookmarkScripts.js
       window.postMessage(
-        { type: "storeBookmarkCode", data: generateJson() },
+        { type: "activateStorageBookmarkCode", data: generateJson() },
         "*"
       );
     }
