@@ -39,7 +39,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#basic-usage">Basic Usage</a></li>
     <li><a href="#credits">Credits</a></li>
     <li><a href="#about">About</a></li>
   </ol>
@@ -66,6 +66,29 @@
     </tbody>
 </table>
 
+<div align="center">
+    <div style="display: flex; align-items: center;">
+        <img src="https://github.com/yycorcino/byte-lobster/blob/media/chrome-ext-img4.png" width="290" height="250" style="display: inline-block; margin-right: 10px;">
+        <table style="display: inline-block;">
+            <thead>
+                <tr>
+                    <th>Main Tab With Bookmarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Effortlessly manage and store bookmarks, allowing you to <a href="https://github.com/yycorcino/byte-lobster/wiki">bookmark and access your recent code.</a> With one click of a button, have the ability to preview, paste, download, and delete a bookmark.</td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top"><a href="https://github.com/yycorcino/byte-lobster/wiki"><img src="https://github.com/yycorcino/byte-lobster/blob/media/chrome-ext-img3.png" style="display: inline-block;"></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<br />
+
 **Welcome to the project of Byte Lobster!**
 
 This powerful Chrome Extension was designed with one goal in mind: to simplify your workflow by automating simple repetitive task with a click of a button. Gone are the days of manually performing these repetitive and time-consuming tasks. With my extension, you can effortlessly clear general registers with just a click, ensuring a fresh register start for your coding. Moreover, you can conveniently save your valuable code to text files, allowing you to organize and access them whenever needed. I understand the frustration of performing these tasks manually, which is why I created this extension. I hated pressing on the registers and inputting 0 for each register I wanted to clear. Say goodbye to tedious processes and hello to Assembly programming. Try it out now and experience the efficiency you've been wanting!
@@ -82,7 +105,7 @@ Getting started with the Chrome extension is quick and easy. Simply download and
 - [ Opera Add-ons ↗︎](https://github.com/yycorcino/byte-lobster)
 - [ Source (for Developers) ↗︎](https://github.com/yycorcino/byte-lobster)
 
-## Usage
+## Basic Usage
 
 Once you have installed the Byte Lobster Chrome extension, you can easily utilize its features to simplify your assembly programming workflow. Follow these steps to make the most out of the extension:
 
