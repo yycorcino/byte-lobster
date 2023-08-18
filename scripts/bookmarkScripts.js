@@ -32,7 +32,7 @@
   };
 
   const newEnvironment = () => {
-    // add bookmark onto ARM CPUlator
+    // add bookmark Btn onto ARM CPUlator
     const editorToolbar = document.querySelector("#qasm_compile").parentElement;
     const bookmarkBtn = document.createElement("button");
     bookmarkBtn.textContent = "Bookmark Code";

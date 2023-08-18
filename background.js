@@ -3,6 +3,27 @@ chrome.runtime.onInstalled.addListener(function () {
   chrome.storage.sync.set({ file_name: "assembly" }, null);
   chrome.storage.sync.set({ code: "codeIsn'tSet" }, null);
   chrome.storage.sync.set({ bookmarks: {} }, null); // array of Json Object
+
+  // inject scripts into ARM webpages that are open already
+  chrome.tabs.query({}, function (tabs) {
+    tabs.forEach(function (tab) {
+      if (tab.url == "https://cpulator.01xz.net/?sys=arm") {
+        chrome.scripting
+          .executeScript({
+            target: { tabId: tab.id },
+            files: [
+              "./scripts/bookmarkScripts.js",
+              "./scripts/contentScripts.js",
+            ],
+          })
+          .then(() => {
+            chrome.tabs.sendMessage(tab.id, {
+              command: "activeNewEnvironment",
+            });
+          });
+      }
+    });
+  });
 });
 
 const waitOnloadThenPaste = (details) => {
