@@ -58,4 +58,67 @@ const sendToContentScripts = async (
   });
 };
 
-export { sendToContentScripts };
+/**
+ * Create an alert banner.
+ *
+ * @param {string} type - Custom alert based on type.
+ */
+
+const createAlert = (type) => {
+  var alertWrapper = document.querySelector("div.alert-wrapper");
+  if (alertWrapper) {
+    alertWrapper.remove();
+  }
+
+  var alertDiv = document.createElement("div");
+  alertWrapper = document.createElement("div");
+  alertWrapper.className = "alert-wrapper";
+  alertWrapper.appendChild(alertDiv);
+
+  if (type === "success") {
+    alertDiv.classList.add("alert-container", "success");
+    alertDiv.innerHTML = `
+      <span class="alert-message"><strong>Success!</strong>&nbsp;File Name is Updated.</span>
+      <span class="alert-close-btn">&times;</span>
+    `;
+  } else {
+    alertDiv.className = "alert-container";
+    alertDiv.innerHTML = `
+      <span class="alert-message"><strong>Danger!</strong>&nbsp;File Name is Invalid.</span>
+      <span class="alert-close-btn">&times;</span>
+    `;
+  }
+  const settingsTab = document.querySelector("#settingsTab");
+  settingsTab.appendChild(alertWrapper);
+  removeAlert();
+};
+
+/**
+ * Function for alert-close-btn and automatically close alert banner within 4 secs.
+ */
+
+const removeAlert = () => {
+  var closeBtn = document.querySelector("div.alert-container .alert-close-btn");
+
+  //   remove in 4 secs
+  setTimeout(function () {
+    var div = closeBtn.parentNode.parentNode;
+    setTimeout(function () {
+      div.style.opacity = "0";
+      if (div.parentNode) {
+        div.parentNode.removeChild(div);
+      }
+    }, 400);
+  }, 4000);
+
+  // option to close before 4 secs
+  closeBtn.onclick = function () {
+    var div = this.parentNode.parentNode;
+    div.style.opacity = "0";
+    setTimeout(function () {
+      div.parentNode.removeChild(div);
+    }, 300);
+  };
+};
+
+export { sendToContentScripts, createAlert };

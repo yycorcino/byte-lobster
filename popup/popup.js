@@ -1,5 +1,6 @@
 import { getActiveTabURL } from "../assets/utils.js";
 import { sendToContentScripts } from "./common/common.js";
+import { createAlert } from "./common/common.js";
 
 const restGRegBtn = document.getElementById("resetGReg");
 restGRegBtn.onclick = async function (e) {
@@ -37,59 +38,6 @@ settingsBtn.onclick = async function (e) {
   });
 };
 
-const createAlert = (type) => {
-  var alertWrapper = document.querySelector("div.alert-wrapper");
-  if (alertWrapper) {
-    alertWrapper.remove();
-  }
-
-  var alertDiv = document.createElement("div");
-  alertWrapper = document.createElement("div");
-  alertWrapper.className = "alert-wrapper";
-  alertWrapper.appendChild(alertDiv);
-
-  if (type === "success") {
-    alertDiv.classList.add("alert-container", "success");
-    alertDiv.innerHTML = `
-      <span class="alert-message"><strong>Success!</strong>&nbsp;File Name is Updated.</span>
-      <span class="alert-close-btn">&times;</span>
-    `;
-  } else {
-    alertDiv.className = "alert-container";
-    alertDiv.innerHTML = `
-      <span class="alert-message"><strong>Danger!</strong>&nbsp;File Name is Invalid.</span>
-      <span class="alert-close-btn">&times;</span>
-    `;
-  }
-  const settingsTab = document.querySelector("#settingsTab");
-  settingsTab.appendChild(alertWrapper);
-  removeAlert();
-};
-
-const removeAlert = () => {
-  var closeBtn = document.querySelector("div.alert-container .alert-close-btn");
-
-  //   remove in 4 secs
-  setTimeout(function () {
-    var div = closeBtn.parentNode.parentNode;
-    setTimeout(function () {
-      div.style.opacity = "0";
-      if (div.parentNode) {
-        div.parentNode.removeChild(div);
-      }
-    }, 400);
-  }, 4000);
-
-  // option to close before 4 secs
-  closeBtn.onclick = function () {
-    var div = this.parentNode.parentNode;
-    div.style.opacity = "0";
-    setTimeout(function () {
-      div.parentNode.removeChild(div);
-    }, 300);
-  };
-};
-
 document.addEventListener("DOMContentLoaded", async () => {
   const settingsTab = document.getElementById("settingsTab");
   const settingsBtn = document.getElementById("settings");
@@ -103,6 +51,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   const mainTab = document.getElementById("mainTab");
   const goMainTabBtn = document.getElementById("goToMainTab");
   goMainTabBtn.onclick = async function (e) {
+    // remove alert if leaving the tab
+    var closeBtn = document.querySelector(
+      "div.alert-container .alert-close-btn"
+    );
+    var div = closeBtn.parentNode.parentNode;
+    div.style.opacity = "0";
+    if (div.parentNode) {
+      div.parentNode.removeChild(div);
+    }
+
     mainTab.style.transform = "translateX(0%)";
     mainTab.classList.add("active");
     settingsTab.classList.remove("active");
