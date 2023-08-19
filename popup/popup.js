@@ -55,10 +55,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     var closeBtn = document.querySelector(
       "div.alert-container .alert-close-btn"
     );
-    var div = closeBtn.parentNode.parentNode;
-    div.style.opacity = "0";
-    if (div.parentNode) {
-      div.parentNode.removeChild(div);
+    if (closeBtn) {
+      var div = closeBtn.parentNode.parentNode;
+      div.style.opacity = "0";
+      if (div.parentNode) {
+        div.parentNode.removeChild(div);
+      }
     }
 
     mainTab.style.transform = "translateX(0%)";
