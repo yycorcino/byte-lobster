@@ -69,3 +69,19 @@ chrome.webNavigation.onCommitted.addListener((details) => {
     activeNewEnvironment(details.tabId);
   }
 });
+
+// handles shortcut presses
+chrome.commands.onCommand.addListener((shortcutCommand) => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+      const url = tabs[0].url;
+      const id = tabs[0].id;
+
+      if (url.includes("https://cpulator.01xz.net/?sys=arm")) {
+        // shortcutCommand -> contentScript to execute on top of DOM (pageActions.js)
+        console.log(shortcutCommand);
+        chrome.tabs.sendMessage(id, { command: shortcutCommand });
+      }
+    }
+  });
+});

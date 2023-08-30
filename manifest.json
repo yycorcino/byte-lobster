@@ -34,5 +34,28 @@
       "default_title": "Byte Lobster", 
       "default_popup": "/popup/popup.html"
   },
+  "commands": {
+    "activateClearGReg": {
+        "suggested_key": {
+          "default": "Ctrl+Shift+1",
+          "mac": "MacCtrl+Shift+1"
+        },
+        "description": "Clear General Purpose Registers."
+      },
+      "activateDOMDownload": {
+        "suggested_key": {
+          "default": "Ctrl+Shift+2",
+          "mac": "MacCtrl+Shift+2"
+        },
+        "description": "Save code to text."
+      },
+      "refresh": {
+        "suggested_key": {
+          "default": "Ctrl+Shift+3",
+          "mac": "MacCtrl+Shift+3"
+        },
+        "description": "Keep code and refresh."
+      }
+  },
   "manifest_version": 3
 }
