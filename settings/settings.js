@@ -18,3 +18,23 @@ openBugReportBtn.onclick = function (e) {
     "_blank"
   );
 };
+
+const closeBannerBtn = document.getElementById("closeBanner");
+closeBannerBtn.onclick = function (e) {
+  const checkbox = document.querySelector('input[name="showAgain"]');
+  if (checkbox.checked) {
+    chrome.storage.sync.set({ show_banner: false }, null);
+  }
+
+  this.parentElement.parentElement.style.display = "none";
+};
+
+// when the pages renders decides if banner is visible
+chrome.storage.sync.get("show_banner", function (result) {
+  const showBanner = result.show_banner;
+  // if not showBanner then hide banner
+  if (!showBanner) {
+    const alertBanner = document.getElementsByClassName("alert")[0];
+    alertBanner.style.display = "none";
+  }
+});

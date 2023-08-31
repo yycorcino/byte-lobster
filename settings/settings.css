@@ -37,3 +37,44 @@ body {
     margin-left: auto;
 }
 
+.alert {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background-color: #59b9de;
+    color: white;
+}
+
+.alert-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1; /* take up remaining space */
+}
+
+.alert-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.closebtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 22px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+
+.form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

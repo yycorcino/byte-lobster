@@ -1,8 +1,11 @@
-// initialize values for file_name and bookmark
 chrome.runtime.onInstalled.addListener(function () {
+  // init values for chrome extension
   chrome.storage.sync.set({ file_name: "assembly" }, null);
   chrome.storage.sync.set({ code: "codeIsn'tSet" }, null);
   chrome.storage.sync.set({ bookmarks: {} }, null); // array of Json Object
+
+  // init values for settings.html
+  chrome.storage.sync.set({ show_banner: "true" }, null);
 
   // inject scripts into ARM webpages that are open already
   chrome.tabs.query({}, function (tabs) {
@@ -79,7 +82,6 @@ chrome.commands.onCommand.addListener((shortcutCommand) => {
 
       if (url.includes("https://cpulator.01xz.net/?sys=arm")) {
         // shortcutCommand -> contentScript to execute on top of DOM (pageActions.js)
-        console.log(shortcutCommand);
         chrome.tabs.sendMessage(id, { command: shortcutCommand });
       }
     }
